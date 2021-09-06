@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-function App() {
+import { AppStore } from './store';
+import { AppThemeProvider } from './theme';
+import PrivateRoute from "./components/PrivateRoute";
+
+import Login from './pages/Login';
+import Register from './pages/Register';
+import DataList from './pages/DataList';
+import ArticleForm from './pages/ArticleForm';
+/**
+ * Root Application Component
+ * @class App
+ */
+const App = () => {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <AppStore>
+        <AppThemeProvider>
+          <BrowserRouter>
+            <Switch>
+              <Route path="/signin" component={Login} />
+              <Route path="/signup" component={Register} />
+
+              <PrivateRoute path="/datalist" component={DataList} />
+              <PrivateRoute path="/edit/:id" component={ArticleForm} />
+              <PrivateRoute path="/add" component={ArticleForm} />
+            </Switch>
+          </BrowserRouter>
+        </AppThemeProvider>
+      </AppStore>
     </div>
   );
-}
+};
 
 export default App;
