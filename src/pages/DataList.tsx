@@ -10,45 +10,12 @@ const useStyles = makeStyles((theme: Theme) =>
     container: {
       display: 'flex',
       flexWrap: 'wrap',
-      width: 400,
+      width: 1000,
       margin: `${theme.spacing(0)} auto`
     },
-    loginBtn: {
-      marginTop: theme.spacing(2),
-      flexGrow: 1
-    },
-    header: {
-      textAlign: 'center',
-      background: '#212121',
-      color: '#fff'
-    },
-    card: {
-      marginTop: theme.spacing(10)
-    }
   })
 );
 
-const columns = [
-  {
-    name: "Title",
-    selector: "title",
-    sortable: true
-  },
-  {
-    name: "Author",
-    selector: "director",
-    sortable: true
-  },
-  {
-    name: "Created At",
-    selector: "runtime",
-    sortable: true,
-    right: true
-  },
-  {
-    name: "Actions",
-  }
-];
 
 const DataList: React.FC<{history: any; match: any}> = ({history}) => {
   const classes = useStyles();
@@ -67,14 +34,14 @@ const DataList: React.FC<{history: any; match: any}> = ({history}) => {
   }
 
   return (
-    <div>
+    <form className={classes.container} noValidate autoComplete="off">
       <FormControlLabel
               label={!state.darkMode ? 'Light mode' : 'Dark mode'}
               control={<Switch checked={state.darkMode} onChange={handleSwitchDarkMode} />}
             />
       <Button onClick={addNewItem} variant="contained" color="primary">New Item +</Button>
       <EnhancedTable history={history}/>
-    </div>
+    </form>
   );
 }
 

@@ -16,15 +16,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import api from '../utils/api';
 import { useAppStore } from '../store/AppStore';
 
-function createData(title: string, author: string, createdat: string) {
-  return { title, author, createdat };
-}
-
-const rows = [
-  createData('Article1', 'A1', 'B1'),
-  createData('Article2', 'A2', 'B2'),
-];
-
 function descendingComparator(a: any, b: any, orderBy: any) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -42,7 +33,7 @@ function getComparator(order: any, orderBy: any) {
 }
 
 function stableSort(array: any, comparator:any) {
-  const stabilizedThis = array.map((el: any, index: any) => [el, index]);
+  const stabilizedThis = array != undefined ? array.map((el: any, index: any) => [el, index]) : [];
   stabilizedThis.sort((a: any, b: any) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -70,7 +61,7 @@ function EnhancedTableHead(props: any) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align='center'
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -152,7 +143,6 @@ const EnhancedTable: React.FC<{history: any}> = ({history}) => {
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState<Array<string>>([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [state, dispatch] = useAppStore();
 
@@ -225,7 +215,8 @@ const EnhancedTable: React.FC<{history: any}> = ({history}) => {
     });
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, state.articles.length - page * rowsPerPage);
+  const length = (state.articles != undefined ? state.articles.length : 0)
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -234,7 +225,6 @@ const EnhancedTable: React.FC<{history: any}> = ({history}) => {
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
             aria-label="enhanced table"
           >
             <EnhancedTableHead
@@ -243,7 +233,7 @@ const EnhancedTable: React.FC<{history: any}> = ({history}) => {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={state.articles.length}
+              rowCount={state.articles != undefined ? state.articles.length : 0}
             />
             <TableBody>
               {stableSort(state.articles, getComparator(order, orderBy))
@@ -275,7 +265,7 @@ const EnhancedTable: React.FC<{history: any}> = ({history}) => {
                   );
                 })}
               {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                <TableRow >
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
@@ -285,7 +275,7 @@ const EnhancedTable: React.FC<{history: any}> = ({history}) => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={state.articles.length}
+          count={state.articles != undefined ? state.articles.length : 0}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
