@@ -23,9 +23,9 @@ const App = () => {
               <Route path="/signin" component={Login} />
               <Route path="/signup" component={Register} />
 
-              <Route path="/datalist" component={DataList} />
-              <Route path="/edit/:id" component={ArticleForm} />
-              <Route path="/add" component={ArticleForm} />
+              <PrivateRoute path="/datalist" component={DataList} />
+              <PrivateRoute path="/edit/:id" component={ArticleForm} />
+              <PrivateRoute path="/add" component={ArticleForm} />
             </Switch>
           </BrowserRouter>
         </AppThemeProvider>
