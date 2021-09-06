@@ -12,6 +12,7 @@ export interface IAppState {
   currentUser?: object | undefined;
   articles?: any | undefined;
   article?: any | undefined;
+  tag?: any | undefined;
   tags?: any | undefined;
 }
 const initialAppState: IAppState = {

@@ -44,22 +44,44 @@ const ArticleForm: React.FC<{history: any; match: any}> = ({history, match}) => 
   const classes = useStyles();
   const [state, dispatch] = useAppStore();
 
-  const [value, setValue] = React.useState('');
+  const [title, setTitle] = React.useState('');
+  const [content, setContent] = React.useState('');
+  const [tag, setTag] = React.useState('');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+    setTitle(event.target.value);
   };
-
+  const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setContent(event.target.value);
+  };
+  const handleTagChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+    const value = event.target.value;
+    setTag(value as typeof tag);
+  };
   const handlepost = () => {
-    api.post('/article').then((res: any) => {
-      dispatch({
-        type: 'UPDATE_ARTICLE',
-        payload: res.data,
-      });
-      history.push('/datalist');
-    }).catch((err: any) => {
-      console.log('error');
-    })
+    const body = {title, content, tag };
+    if (match.params.id) {
+      api.put(`/article/:${match.params.id}`, body).then((res: any) => {
+        dispatch({
+          type: 'UPDATE_ARTICLE',
+          payload: res.data,
+        });
+        history.push('/datalist');
+      }).catch((err: any) => {
+        console.log('error');
+      })
+    } else {
+      api.post('/article', body).then((res: any) => {
+        dispatch({
+          type: 'UPDATE_ARTICLE',
+          payload: res.data,
+        });
+        history.push('/datalist');
+      }).catch((err: any) => {
+        console.log('error');
+      })  
+    }
+    
   }
 
   useEffect(() => {
@@ -91,11 +113,11 @@ const ArticleForm: React.FC<{history: any; match: any}> = ({history, match}) => 
         <CardContent  style={{width: '100%'}}>
           <div className={classes.division}>
             <TextField
-              id="outlined-multiline-flexible"
+              id="title"
               label="Title"
               multiline
               maxRows={4}
-              value={value}
+              value={state.article != undefined ? state.article.title: ""}
               onChange={handleChange}
               variant="outlined"
               style={{width:'100%'}}
@@ -103,11 +125,12 @@ const ArticleForm: React.FC<{history: any; match: any}> = ({history, match}) => 
           </div>
           <div className={classes.division}>
             <TextField
-              id="outlined-multiline-static"
+              id="content"
               label="Content"
               multiline
               rows={4}
-              defaultValue=""
+              defaultValue={state.article != undefined ? state.article.content : ""}
+              onChange={handleContentChange}
               variant="outlined"
               style={{width:'100%'}}
             />
@@ -119,6 +142,8 @@ const ArticleForm: React.FC<{history: any; match: any}> = ({history, match}) => 
               labelId="demo-simple-select-outlined-label"
               id="demo-simple-select-outlined"
               label="Age"
+              value={tag}
+              onChange={handleTagChange}
             >
               <MenuItem value="">
                 <em>None</em>

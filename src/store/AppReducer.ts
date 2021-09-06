@@ -32,7 +32,8 @@ const AppReducer: React.Reducer<IAppState, any> = (state, action) => {
     case 'UPDATE_ARTICLE':
       return {
         ...state,
-        article: action?.payload
+        article: action?.payload.article,
+        tag: action?.payload.tag
       }
     case 'UPDATE_ARTICLES':
     case 'GET_ARTICLES':
